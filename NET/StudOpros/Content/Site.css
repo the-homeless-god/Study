@@ -1,0 +1,110 @@
+﻿body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+.nav {
+    margin-top: 30px;
+}
+
+.inp {
+    height: 42px;
+    text-align: center;
+}
+
+.btn {
+    margin-bottom: 6px;
+    height: 40px;
+}
+
+.item {
+    margin-top: 25px;
+}
+
+.second {
+    margin-left: 25px;
+}
+
+.select-margin {
+    margin-bottom: 3px;
+}
+
+.teacher-img {
+    max-width: 220px;
+    border-radius: 50%;
+    margin: 6px;
+    max-height:250px;
+}
+
+.teacher-name {
+    text-align: center;
+}
+
+.card {
+    width: 220px;
+    margin: 10px;
+    height:450px;
+}
+
+.card-btn {
+    width: 130px;
+    position:relative;
+    bottom:0;
+}
+
+.card-container {
+    padding: 10px;
+}
+
+.prima {
+    width: 25%;
+}
+
+
+.teacherRating {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+    .teacherRating td, .teacherRating th {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+
+    .teacherRating tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    .teacherRating tr:hover {
+        background-color: #ddd;
+    }
+
+    .teacherRating th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: #4CAF50;
+        color: white;
+    }
+
