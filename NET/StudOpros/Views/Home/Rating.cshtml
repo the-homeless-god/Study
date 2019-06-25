@@ -1,0 +1,99 @@
+﻿@model List<StudOpros.Models.Teacher>
+@{
+    ViewBag.Title = "Рейтинг";
+}
+
+<script src="~/Scripts/sorttable.js"></script>
+<h2>Рейтинг</h2>
+
+
+<div align="right">
+    <button class="btn btn-primary" onclick="printTable()">Печать</button>
+</div>
+
+<div id="teacherRatingTable">
+    <style type="text/css">
+        .teacherRating {
+            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+            .teacherRating td, .teacherRating th {
+                border: 1px solid #ddd;
+                padding: 8px;
+            }
+
+            .teacherRating tr:nth-child(even) {
+                background-color: #f2f2f2;
+            }
+
+            .teacherRating tr:hover {
+                background-color: #ddd;
+            }
+
+            .teacherRating th {
+                padding-top: 12px;
+                padding-bottom: 12px;
+                text-align: left;
+                background-color: #4CAF50;
+                color: white;
+            }
+    </style>
+    <table style="margin-top:15px;" id="teacherRating" class="sortable teacherRating">
+        <thead>
+            <tr>
+                <th>
+                    ФИО
+                </th>
+                <th>
+                    Профессиональный
+                </th>
+                <th>
+                    Технологический
+                </th>
+                <th>
+                    Личностный
+                </th>
+                <th>
+                    Итоговый
+                </th>
+            </tr>
+        </thead>
+
+        @if (Model != null || Model.Count() != 0)
+        {
+            <tbody>
+                @foreach (var teacher in Model)
+                {
+                    <tr>
+                        <td>
+                            @teacher.Name
+                        </td>
+                        <td>
+                            @teacher.AverageScoreByProf
+                        </td>
+                        <td>
+                            @teacher.AverageScoreByTech
+                        </td>
+                        <td>
+                            @teacher.AverageScoreByPersonal
+                        </td>
+                        <td>
+                            @teacher.SummaryAverageScore
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        }
+    </table>
+</div>
+<script>
+    function printTable() {
+        var divToPrint = document.getElementById("teacherRatingTable");
+        newWin = window.open("");
+        newWin.document.write(divToPrint.outerHTML);
+        newWin.print();
+        newWin.close();
+    }
+</script>

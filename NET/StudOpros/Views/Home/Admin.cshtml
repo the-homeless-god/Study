@@ -1,0 +1,329 @@
+﻿@model StudOpros.ViewModels.Data
+@{
+    ViewBag.Title = "Панель администратора";
+}
+
+
+<script src="~/Scripts/sorttable.js"></script>
+<body>
+    <h2>Панель администратора</h2>
+    <ul class="nav nav-tabs" id="adminTab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="people-tab" data-toggle="tab" href="#people" role="tab" aria-controls="people" aria-selected="true">Пользователи</a>
+        </li>
+        @*<li class="nav-item">
+            <a class="nav-link" id="point-tab" data-toggle="tab" href="#point" role="tab" aria-controls="point" aria-selected="false">Показатели</a>
+        </li>*@
+        <li class="nav-item">
+            <a class="nav-link" id="rating-tab" href="/Home/Rating" aria-selected="false">Рейтинг</a>
+        </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="people" role="tabpanel" aria-labelledby="people-tab">
+            <div align="center" class="item">
+                <ul class="nav nav-tabs second" id="groupTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="group-tab" data-toggle="tab" href="#group" role="tab" aria-controls="group" aria-selected="true">Группы</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="teacher-tab" data-toggle="tab" href="#teacher" role="tab" aria-controls="group" aria-selected="false">Преподаватели</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="student-tab" data-toggle="tab" href="#student" role="tab" aria-controls="student" aria-selected="false">Студенты</a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="mySubContent">
+                    <div class="tab-pane fade show active" id="group" role="tabpanel" aria-labelledby="group-tab">
+                        <div class="item">
+                            @*<input id="GroupName" style="width:250px;" class="inp" type="text" placeholder="Введите название группы" />
+                            <button onclick="addView('Group',1)" class="btn btn-primary">Добавить</button>*@
+
+                            <table style="margin-top:15px;" id="teacherRating" class="sortable teacherRating">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            Название
+                                        </th>
+                                        <th>
+                                            Студенты
+                                        </th>
+                                    </tr>
+                                </thead>
+
+                                @if (Model.Groups != null && Model.Groups.Count() != 0)
+                                {
+                                    <tbody>
+                                        @foreach (var group in Model.Groups)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @group.Name
+                                                </td>
+                                                @foreach (var student in group.Students)
+                                                {
+                                                    if (student.Result != 0)
+                                                    {
+                                                    <td id="studentBlock_@student.Id"> @student.Name | @student.Result.ToString() %</td>
+                                                    }
+                                                }
+                                            </tr>
+                                        }
+                                    </tbody>
+                                }
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="teacher" role="tabpanel" aria-labelledby="teacher-tab">
+                        <div class="item">
+                            @*<input id="TeacherName" style="width:350px;" class="inp" type="text" placeholder="Введите ФИО преподавателя" />
+
+                            <input id="TeacherImageUrl" class="inp" type="text" placeholder="Ссылка на фото" />
+
+                            <select style="margin-top:10px;" onchange="addToTeacherType(event)" class="form-control" id="TeacherType" size="25" multiple="multiple">
+                                <option selected disabled value="">
+                                    Выберите группы
+                                </option>
+                                @foreach (var group in Model.Groups)
+                                {
+                                    <option value="@group.Id">@group.Name</option>
+                                }
+                            </select>
+
+                            <button style="margin-top:10px;" onclick="addView('Teacher',2)" class="btn btn-primary">Добавить</button>*@
+
+                            <table style="margin-top:15px;" id="teacherRating" class="sortable teacherRating">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            ФИО
+                                        </th>
+                                        <th>
+                                            Группы
+                                        </th>
+                                    </tr>
+                                </thead>
+
+                                @if (Model.Teachers != null && Model.Teachers.Count() != 0)
+                                {
+                                    <tbody>
+                                        @foreach (var teacher in Model.Teachers)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @teacher.Name
+                                                </td>
+                                                @foreach (var group in teacher.Groups)
+                                                {
+                                                    <td>@group.Name</td>
+                                                }
+
+                                            </tr>
+                                        }
+                                    </tbody>
+                                }
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="student" role="tabpanel" aria-labelledby="student-tab">
+                        <div class="item">
+                            <input id="StudentName" style="width:250px;" class="inp" type="text" placeholder="Введите ФИО студента" />
+
+                            <select style="margin-top:10px;" onchange="addToStudentType(event)" class="form-control" id="StudentType">
+                                <option selected disabled value="">
+                                    Выберите группу
+                                </option>
+                                @foreach (var group in Model.Groups)
+                                {
+                                    <option value="@group.Id">@group.Name</option>
+                                }
+                            </select>
+
+                            <button style="margin-top:10px;" onclick="addView('Student',3)" class="btn btn-primary">Добавить</button>
+
+
+                            <table style="margin-top:15px;" id="studentRating" class="sortable teacherRating">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            ФИО
+                                        </th>
+                                        <th>
+                                            Группа
+                                        </th>
+                                        <th>
+                                            КЛЮЧ
+                                        </th>
+                                    </tr>
+                                </thead>
+
+                                @if (Model.Students != null && Model.Students.Count() != 0)
+                                {
+                                    <tbody>
+                                        @foreach (var student in Model.Students)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @student.Name
+                                                </td>
+                                                <td>
+                                                    @Model.Groups.FirstOrDefault(g => g.Id == student.GroupId).Name
+                                                </td>
+                                                <td>
+                                                    @student.Hash
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                }
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @*<div class="tab-pane fade" id="point" role="tabpanel" aria-labelledby="point-tab">
+            <div align="center" class="item">
+                <input id="PointName" style="width:250px;" class="inp" type="text" placeholder="Введите название показателя" />
+                <select style="margin-top:10px;" onchange="addToPointType(event)" class="form-control" id="PointType">
+                    <option selected disabled value="">
+                        Выберите блок
+                    </option>
+                </select>
+                <button style="margin-top:10px;" onclick="addView('Point',4)" class="btn btn-primary">Добавить</button>
+                <div id="PointList" style="margin-top:15px;" class="list-group">
+                </div>
+            </div>
+        </div>*@
+    </div>
+
+
+
+</body>
+
+
+<script>
+    var site = window.location.href.substr(0, window.location.href.indexOf('#'));
+
+    var type = { Name: "" }
+    var student = {
+        Name: "",
+        GroupId: 0
+    };
+    var teacher = {
+        Name: "",
+        Groups: []
+    };
+    var point = {
+        Name: "",
+        BlockId: 0
+    };
+    var groups = [];
+    var teachers = [];
+    var points = [];
+
+
+    function addToStudentType(event) {
+        var option = event.target.selectedOptions[0];
+
+        if (option.value != 0) student.GroupId = parseInt(option.value);
+    }
+
+    function addToPointType(event) {
+        var option = event.target.selectedOptions[0];
+
+        if (option.value != 0) point.BlockId = parseInt(option.value);
+    }
+
+    function addToTeacherType(event) {
+        var items = event.target.selectedOptions;
+
+        options = [];
+        teacher.Groups = [];
+
+        for (var i = 0; i < items.length; i++) {
+            if (items[i].value != "0") {
+                var opt = { Id: parseInt(items[i].value) };
+                options.push(opt);
+            }
+        };
+
+        teacher.Groups = options;
+    }
+
+    function addView(view, type) {
+        var obj = {
+            Name: ""
+        };
+        var name = document.getElementById(view + "Name").value;
+        if (name == undefined || name == null || name == '') alert('Вы заполнили не все поля');
+        else {
+            var status = false;
+            if (type == 1) {
+                obj.Name = name;
+                status = true;
+            }
+            else if (type == 2) {
+                if (teacher.Groups.length == 0) alert('Выберите группы');
+                else {
+                    teacher.Name = name;
+                    teacher.ImgUrl = document.getElementById(view + "ImageUrl").value;
+                    if (teacher.ImgUrl == undefined || teacher.ImgUrl == null || teacher.ImgUrl == "") {
+                        alert('Введите сылку на картинку');
+                    }
+                    else {
+                        obj = teacher;
+                        status = true;
+                    }
+                }
+            }
+            else if (type == 3) {
+                student.Name = name;
+
+                if (student.GroupId == 0) alert('Выберите группу');
+                else {
+                    obj = student;
+                    status = true;
+                }
+            }
+            else if (type == 4) {
+                point.Name = name;
+                if (point.BlockId == 0) alert('Выберите блок');
+                else {
+                    obj = point;
+                    status = true;
+                }
+            }
+            sendRequest(obj, site + 'api/FullApi/create' + view, 'POST');
+        }
+    }
+
+    bloks = [
+        { Id: 1, Name: "Профессиональный блок" },
+        { Id: 2, Name: "Технологический блок" },
+        { Id: 3, Name: "Личностный блок" },
+    ];
+
+    var st = {
+        Email: '',
+        Id: 0
+    }
+
+    function sendRequest(item, url, type) {
+        var xhr = new XMLHttpRequest();
+
+        xhr.open(type, url, true)
+
+        if (type == 'POST') {
+            xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+        }
+
+        xhr.onreadystatechange = function () {
+            if (this.readyState != 4) return;
+           // alert('OK');
+            location.reload();
+        }
+
+        type == 'POST' ? xhr.send(JSON.stringify(item)) : xhr.send();
+    }
+
+</script>

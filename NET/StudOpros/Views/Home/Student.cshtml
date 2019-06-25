@@ -1,0 +1,120 @@
+﻿@model StudOpros.ViewModels.StudentViewModel
+@{
+    ViewBag.Title = "Student";
+    var currentTeacherId = 0;
+}
+
+<h2>Привет, @Model.Student.Name </h2>
+
+@if (Model != null && Model.Teachers.Count() != 0)
+{
+    <div class="row card-container">
+        @for (int i = 0; i < Model.Teachers.Count(); i++)
+        {
+            <div align="center" id="teacher_@Model.Teachers[i].Id" class="card">
+                @if (Model.Teachers[i].ImgUrl.Equals("0"))
+                {
+                    <img class="teacher-img" src="~/Content/anon.png">
+                }
+                else
+                {
+                    <img class="teacher-img" height="220" width="180" src="@Model.Teachers[i].ImgUrl">
+                }
+                <div class="card-body">
+                    <h5 class="card-title teacher-name">@Model.Teachers[i].Name</h5>
+                </div>
+                <button href="#" class="btn btn-primary card-btn" onclick="changeCurrentTeacher(@Json.Encode(Model.Teachers[i]))" data-toggle="modal" data-target="#exampleModal">Оценить</button>
+
+            </div>
+
+
+        }
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="teacherNameHeader"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div align="center" class="modal-body">
+                    @foreach (var select in Model.Points)
+                    {
+                        <div style="border:1px solid gray;">
+                            <p>@select.Name</p>
+                            <select class="form-control select-margin" id="selectMod+@select.Id">
+                                <option selected disabled value="0">Выберите оценку</option>
+                                @foreach (var option in Model.pointPairs)
+                                {
+                                    <option value="@option.Key">@option.Value</option>
+                                }
+                            </select>
+                        </div>
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Отменить</button>
+                    <button type="button" onclick="sendPoints(@Json.Encode(@Model.Points))"data-dismiss="modal"  class="btn btn-success">Отправить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<script>
+    var site = window.location.href.substr(0, window.location.href.indexOf('#'));
+
+    var countPoints = 0;
+    var collectionAnswers = [];
+    var currentTeacher;
+
+    function changeCurrentTeacher(teacher) {
+        currentTeacher = teacher;
+        document.getElementById('teacherNameHeader').innerText = currentTeacher.Name;
+    }
+
+    function sendPoints(points) {
+        collectionAnswers = [];
+        countPoints = points.length;
+        var flag = true;
+        for (var i = 1; i < countPoints + 1; i++) {
+            if (parseInt(document.getElementById('selectMod+' + points[i - 1].Id).value) == 0) flag = false;;
+        }
+
+        if (flag == true) {
+        for (var i = 1; i < countPoints + 1; i++) {
+            var curVal = parseInt(document.getElementById('selectMod+' + points[i - 1].Id).value);
+
+                var answer = {
+                    StudentId: @Model.Student.Id,
+                    TeacherId: currentTeacher.Id,
+                    Mark: curVal,
+                    PointId: i,
+                };
+                collectionAnswers.push(answer);
+
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', site + 'api/FullApi/createRating', true)
+            xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+
+
+            xhr.onreadystatechange = function () {
+                if (this.readyState != 4) return;
+                document.getElementById('teacher_' + currentTeacher.Id).remove();
+            }
+
+                xhr.send(JSON.stringify(collectionAnswers));
+
+            }
+        }
+        else {
+            alert('Вы ответили не на все вопросы');
+        }
+    }
+
+
+</script>
